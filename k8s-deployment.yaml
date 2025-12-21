@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doj-va
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: doj-va
+  template:
+    metadata:
+      labels:
+        app: doj-va
+    spec:
+      containers:
+        - name: doj-va
+          image: ghcr.io/your-org/doj-va:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: doj-va-secrets
+                  key: JWT_SECRET
+            - name: ALLOWED_ORIGINS
+              value: "*"
+            - name: DATA_RETENTION_DAYS
+              value: "30"
+            - name: CACHE_TTL_SECONDS
+              value: "600"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doj-va
+spec:
+  selector:
+    app: doj-va
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: http
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: doj-va-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: doj-va
+  minReplicas: 3
+  maxReplicas: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: doj-va-config
+data:
+  ALLOWED_ORIGINS: "*"
+  DATA_RETENTION_DAYS: "30"
+  CACHE_TTL_SECONDS: "600"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: doj-va-secrets
+stringData:
+  JWT_SECRET: change_me

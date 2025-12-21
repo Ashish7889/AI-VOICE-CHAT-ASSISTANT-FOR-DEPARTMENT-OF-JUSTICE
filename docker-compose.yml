@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    image: doj-va:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-change_me}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+      - DATA_RETENTION_DAYS=${DATA_RETENTION_DAYS:-30}
+      - CACHE_TTL_SECONDS=${CACHE_TTL_SECONDS:-600}
+      - VECTOR_BACKEND=${VECTOR_BACKEND:-stub}
+    restart: unless-stopped
