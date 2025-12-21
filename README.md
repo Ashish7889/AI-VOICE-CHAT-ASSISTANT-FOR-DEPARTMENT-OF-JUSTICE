@@ -1,13 +1,21 @@
-# DoJ Virtual Assistant (AI Chatbot)
+# AI-VOICE-CHAT-ASSISTANT-FOR-DEPARTMENT-OF-JUSTICE
 
-Production-ready virtual assistant for the Department of Justice: FAQs, document retrieval (RAG), multilingual, and voice support. Backend: FastAPI. Frontend: React (served statically). Containerized with Docker, deployable to Kubernetes.
+The DoJ Virtual Assistant transforms citizen access to judicial information using AI and NLP. It enhances transparency, efficiency, and engagement while reducing staff workload. In the future, it can expand across ministries, creating a network of AI-driven governance tools for a more transparent and digitally empowered India.
+
+## Features
+- **AI Lawyer Persona**: Acts as a helpful legal assistant for poor people who don't know their rights and laws
+- **Detailed Legal Information**: Provides IPC sections, punishments, and years of imprisonment for criminal cases
+- **Multilingual Support**: Responds in the same language as user input
+- **Simple Language**: Explains complex legal concepts in easy-to-understand terms
+- **Mistral API Integration**: Uses Mistral AI for comprehensive legal assistance
 
 ## Quickstart
 
 1. Python 3.11+
 2. Install deps: `pip install -r requirements.txt`
-3. Run: `uvicorn backend.server:app --reload`
-4. Open: http://localhost:8000
+3. Create a `.env` based on `.env.example` with your Mistral API key
+4. Run: `uvicorn backend.server:app --reload`
+5. Open: http://localhost:8000
 
 ## Environment
 Create a `.env` based on `.env.example`.
@@ -27,13 +35,12 @@ docker run -p 8000:8000 doj-va
 ## Kubernetes
 See `k8s-deployment.yaml`.
 
-
 ## Demo Usage
 
 ### Try the Assistant
 1. Start the backend: `uvicorn backend.server:app --reload`
 2. Open [http://localhost:8000/ui/](http://localhost:8000/ui/) in your browser.
-3. Ask: `What is the procedure for filing a complaint?` (uses the sample document).
+3. Ask: "What are my rights if police arrests me without reason?" (AI will provide IPC sections and punishments)
 
 ### Upload Documents (Admin Only)
 To upload, you need an admin JWT. For demo, use:
