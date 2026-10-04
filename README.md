@@ -47,7 +47,7 @@ To upload, you need an admin JWT. For demo, use:
 
 ```
 import jwt
-token = jwt.encode({"sub": "admin", "role": "admin"}, "change_me", algorithm="HS256")
+token = jwt.encode({"sub": "admin", "role": "admin"}, "generate_a_long_random_secret_here", algorithm="HS256")
 print(token)
 ```
 Then use this token as a Bearer token in the `Authorization` header for `/upload`.
